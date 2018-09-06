@@ -7,6 +7,8 @@ jobs:
     steps:
       - checkout
   deploy:
+    machine:
+      enabled: true
     working_directory: ~/tmp
     steps:
       - run:
