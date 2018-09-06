@@ -7,8 +7,8 @@ jobs:
     steps:
       - checkout
   deploy:
-    machine:
-      enabled: true
+    docker:
+      - image: circleci/python:2.7-jessie
     working_directory: ~/tmp
     steps:
       - run:
