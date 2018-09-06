@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="favicon.ico" rel="shortcut icon" type="image/ico">
+    <title>Angular Augury</title>
+
+    <!-- Material Design icons -->
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,500,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="../../vendors/material-design-lite/material.min.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <link rel="stylesheet" href="../styles/main.css">
+</head>
+<body class="mdl-demo mdl-base">
+<div class="mdl-demo mdl-layout mdl-js-layout mdl-layout--fixed-drawer mdl-layout--fixed-header">
+  <header class="mdl-layout__header">
+    <div class="mdl-layout__header-row">
+      <span class="mdl-layout-title">
+        <a class="site-header mdl-navigation__link--title" href="/">
+          <img src="../../images/angular-logo-with-text.svg" alt="">
+          <span class="microsite-name mdl-typography--font-light">Augury</span>
+        </a>
+      </span>
+    <input type="checkbox" id="site-nav-checkbox" class="visuallyhidden">
+    <div class="top-nav-wrapper">
+        <label for="site-nav-checkbox">SITE MENU</label>
+        <nav class="mdl-navigation">
+            
+            <a class="mdl-navigation__link" href="/pages/guides/">Guides</a>
+            
+            <a class="mdl-navigation__link" href="/pages/resources/">Resources</a>
+            
+            <a class="mdl-navigation__link" href="https://github.com/rangle/augury/blob/dev/CHANGELOG.md">Change Log</a>
+            
+        </nav>
+        <div class="mdl-layout-spacer"></div>
+        <nav class="mdl-navigation">
+            <a class="mdl-navigation__link" href="https://chrome.google.com/webstore/detail/augury/elgalmkoelokbchhkhacckoklkejnhcd" onclick="trackOutboundLinkNav('https://chrome.google.com/webstore/detail/augury/elgalmkoelokbchhkhacckoklkejnhcd')"> Install </a>
+        </nav>
+    </div>
+    </div>
+  </header>
+
+
+<div class="mdl-layout__drawer">
+    <span class="mdl-layout-title">Guides</span>
+
+    <nav class="mdl-navigation">
+        <nav class="mdl-navigation">
+            
+            <a class="mdl-navigation__link" href="augury.html">
+                1 - augury
+            </a>
+            
+            <a class="mdl-navigation__link selected" href="io-demo.html">
+                2 - io demo
+            </a>
+            
+            <a class="mdl-navigation__link" href="dependency-injection.html">
+                3 - dependency injection
+            </a>
+            
+            <a class="mdl-navigation__link" href="routes.html">
+                4 - routes
+            </a>
+            
+            <a class="mdl-navigation__link" href="module-list.html">
+                5 - module list
+            </a>
+            
+            <a class="mdl-navigation__link" href="architecture.html">
+                6 - architecture
+            </a>
+            
+            <a class="mdl-navigation__link" href="contribute.html">
+                7 - contribute
+            </a>
+            
+        </nav>
+    </nav>
+</div>
+
+<main class="mdl-layout__content">
+    <header class="hero-background">
+        <section class="section mdl-grid mdl-grid--no-spacing">
+            <div class="mdl-cell">
+                <h4 class="mt1 page-title">Input Output Demo</h4>
+            </div>
+        </section>
+    </header>
+
+    <div class="page-content markdown-doc">
+        <p><img src="images/io-app.png" style="width: 100%"></p>
+<p><a href="https://augury.angular.io/examples/input-output/app/" target="blank">Launch Demo Application</a></p>
+<h2>Description</h2><p>The <em>Input Output Angular</em> application demonstrates passing data inside a component as well as across components. The application makes uses of Angular input and output decorators as well as event and data binding.</p>
+<p>The IO Application is composed of 5 components that are:</p>
+<h3>Components</h3><ul>
+<li>Root Component</li>
+<li>Jumbo Message Board</li>
+<li>Message Entry</li>
+<li>Counter</li>
+<li>Toggle Button</li>
+</ul>
+<h2>Architecture</h2><p>The IO application <em>root</em> component is <code>AppComponent</code>, it houses the other 4 components that each have a specific behaviour.</p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>AppComponent</code></td>
+<td>Root Component</td>
+</tr>
+<tr>
+<td><code>MessageBoardComponent</code></td>
+<td>Large message board.</td>
+</tr>
+<tr>
+<td><code>MessageEntryComponent</code></td>
+<td>Message entry form that emits a message.</td>
+</tr>
+<tr>
+<td><code>CounterComponent</code></td>
+<td>A counter that emits a count value.</td>
+</tr>
+<tr>
+<td><code>ToggleComponent</code></td>
+<td>Toggle button with state lights.</td>
+</tr>
+</tbody>
+</table>
+<h2>Opening Augury</h2><p>To use Augury, we need to open DevTools.</p>
+<pre><code>Ctrl + Shift + I (Cmd + Opt + I on Mac)
+</code></pre><p>When DevTools opens, select the <em>Augury</em> tab located on the far right.</p>
+<h2>Component view</h2><p>Once Augury is opened, the component view is presented in the <em>Component Tree</em>. It shows all the available components in the application, along with their parent-child relationship. Below we see the list of components discussed in the architecture section earlier.</p>
+<p>The application <em>root</em> component <code>AppComponent</code> is listed at the top. Shifted slightly to the right and appearing under the <em>root</em> component are all the children components.</p>
+<p><img src="images/component-tree.png"></p>
+<p>In code, a child component is a component that appears inside a component&#39;s <code>template</code>. If we peek at the file <code>app.component.html</code>, we will see.</p>
+<p><strong>Edited for readability</strong></p>
+<pre><code>...
+    &lt;div&gt;
+      &lt;app-messageboard&gt;&lt;/app-messageboard&gt;
+    &lt;/div&gt;
+...
+    &lt;div&gt;
+      &lt;app-messageentry&gt;&lt;/app-messageentry&gt;
+    &lt;/div&gt;
+...
+    &lt;div&gt;
+      &lt;div&gt;
+        &lt;app-counter&gt;&lt;/app-counter&gt;
+      &lt;/div&gt;
+...
+      &lt;app-toggle&gt;&lt;/app-toggle&gt;
+    &lt;/div&gt;
+</code></pre><p>If we select <code>AppComponent</code> inside the <em>Component Tree</em>, to the left inside the <em>Properties</em> tab we see the component&#39;s properties under the <em>State</em> group.</p>
+<p><img src="images/properties-app-component.png"></p>
+<p>If you have looked through the example code for IO application, you will notice there is one property missing, that being the property <code>count</code>.</p>
+<p><strong>app.component.ts</strong></p>
+<pre><code class="language-js">@Component({
+  selector: &#39;app-root&#39;,
+  templateUrl: &#39;./app.component.html&#39;,
+  styleUrls: [&#39;./app.component.css&#39;]
+})
+export class AppComponent {
+  title = &#39;Angular Input Output&#39;;
+  count: number;
+
+  @Input() message = &quot;Jumbo Shrimp!&quot;;
+
+  ...
+}
+</code></pre>
+<p>Augury will not show properties in a component if it not assigned a value, since TypeScript will simply compile it out. It is therefore suggested you assign a default value to each property. Having a property with an <code>undefined</code> value is poor coding practice and is an anti-pattern.</p>
+<p><strong>Bad</strong></p>
+<pre><code class="language-js">class Foo {
+   name: string;
+}
+</code></pre>
+<p><strong>Good</strong></p>
+<pre><code class="language-js">class Foo {
+  name: string = &quot;&quot;;
+}
+</code></pre>
+<p>In our example IO application, we have intentionally declared a property count with no assigned value to demonstrate the behaviour you would see in Augury. If you are not aware of why a property failed to appear, you might be confused.</p>
+<p>However if we click on one of the counter buttons, this will initialize the count property with a value.</p>
+<h2>Editing properties</h2><p>In the <em>Properties</em> tab, under <em>State</em>, an editable property will be displayed with a dashed underline. Let us change the <code>title</code> property of <code>AppComponent</code>.</p>
+<ol>
+<li>Select <code>AppComponent</code> from <em>Component Tree</em> tab.</li>
+<li>Click on the text to the right of <code>title</code> from the <em>Properties</em> tab.</li>
+<li>Type &quot;IO App&quot; followed by the <em>Enter</em> key.</li>
+</ol>
+<p><img src="images/editing-title-app.png"></p>
+<h2>Firing events</h2><p>The IO application has two components that emit an event. The <code>CounterComponent</code> and <code>MessageEntryComponent</code> have a event property decorated with <code>@Output()</code>, which has an <code>EventEmitter</code> attached to it.</p>
+<p>We will look at <code>MessageEntryComponent</code>, start by selecting the component. In the Properties tab, you will notice <code>messageEntry</code> under State. Click and type a message, like &quot;Debugging with Augury&quot; and click on the Emit button.</p>
+<p><img src="images/emitting.png"></p>
+<p>You will notice in the IO app, under <em>Message Board</em> the new message is displayed. By clicking on the <em>Emit</em> button, an event was fired, in particular an event called <code>messageEvent</code>.</p>
+<h2>Viewing source code</h2><p>Augury provides a quick and convenient way to jump to the source code of a selected component. To do this, click on the <em>View Source</em> link, it is located in the <em>Properties</em> tab.</p>
+<p><img src="images/view-source.png"></p>
+<p>Following along from the previous step, with <code>MessageEntryComponent</code> selected, click on <em>View Source</em>. This will bring up the source code in DevTools by switching to the <em>Sources</em> tab.</p>
+<p>Earlier under section <em>Firing Events</em> we emitted the <code>messageEvent</code> event. Looking at the source code, we can see this property is defined with the <code>@Output()</code> decorator.</p>
+<p><img src="images/sources.png"></p>
+<p>If we want to convince ourselves that an event is triggered, we can set a breakpoint inside the event handler <code>onSend()</code> and emit a new event.</p>
+<p><img src="images/debugging-with-notes.png" style="width: 100%"></p>
+<p>This concludes our journey of looking at the IO application with Augury. You should now feel more comfortable debugging input, output, property bindings and events in an Angular app.</p>
+
+    </div>
+
+
+    <footer class="mdl-mega-footer">
+    <section class="mdl-grid mdl-grid--no-spacing">
+        <div class="mdl-cell mdl-cell--3-col mdl-layout--large-screen-only mdl-typography--text-center">
+            <img style="width: 110px; height: 120px" src="../../images/angular-logo.svg" alt="">
+        </div>
+        <div class="mdl-cell mdl-cell--3-col mdl-cell--12-col-tablet mdl-cell--12-col-phone">
+            <h4>Resources</h4>
+            <ul class="footer-links">
+                <li> <a class="" href="https://www.angular.io" title="Learn Angular">Learn Angular</a> </li>
+            </ul>
+        </div>
+        <div class="mdl-cell mdl-cell--3-col mdl-cell--12-col-tablet mdl-cell--12-col-phone">
+            <h4>Help</h4>
+            <ul class="footer-links">
+                <li> <a class="" href="https://github.com/rangle/augury/issues" title="Angular Augury GitHub Issues">Report Issues</a> </li>
+            </ul>
+        </div>
+        <div class="mdl-cell mdl-cell--3-col mdl-cell--12-col-tablet mdl-cell--12-col-phone">
+            <h4>Community</h4>
+            <ul class="footer-links">
+                <li> <a target="_blank" href="http://rangle.io/" title="Rangle.io">Rangle.io</a> </li>
+                <li> <a class="" href="https://github.com/rangle/augury" title="Angular Augury GitHub">GitHub</a> </li>
+                <li> <a class="" href="https://augury-slack.herokuapp.com" title="Angular Augury Slack">Slack</a> </li>
+            </ul>
+        </div>
+    </section>
+</footer>
+<footer>
+    <div class="mdl-mega-footer--bottom-section">
+        <p class="mdl-typography--font-light center"> Powered by Google ©2010-2016. Code licensed under an <a href="/license.html">MIT-style License</a>. Documentation licensed under <a href="http://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</p>
+    </div>
+</footer>
+
+</main></div>
+
+<script src="../../tools/prism.js"></script>
+<script src="../../vendors/material-design-lite/material.min.js"></script>
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-8594346-15', 'auto');
+    ga('send', 'pageview');
+</script>
+</body>
+</html>

@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="favicon.ico" rel="shortcut icon" type="image/ico">
+    <title>Angular Augury</title>
+
+    <!-- Material Design icons -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,500,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="vendors/material-design-lite/material.min.css">
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+<body class="mdl-demo mdl-base">
+<h1>Basic Augury Architecture</h1><h3>Table of content</h3><ul>
+<li><a href="#outline">Outline</a><ul>
+<li><a href="#execution-contexts">Execution contexts</a></li>
+</ul>
+</li>
+<li><a href="#backend">Backend</a><ul>
+<li><a href="#background-script">Background script</a></li>
+<li><a href="#code-injection">Code injection</a></li>
+<li><a href="#initialization">Initialization</a></li>
+<li><a href="#angular-validation">Angular Validation</a></li>
+<li><a href="#backend">Backend</a></li>
+</ul>
+</li>
+<li><a href="#frontend">Frontend</a><ul>
+<li><a href="#angular-2-component-tree">Angular 2 component tree</a></li>
+<li><a href="#performance-considerations">Performance considerations</a></li>
+</ul>
+</li>
+<li><a href="#serialization">Serialization</a></li>
+<li><a href="#data-structures">Data structures</a></li>
+<li><a href="#frontend-architecture">Frontend architecture</a></li>
+<li><a href="#references">References</a></li>
+<li><a href="#updated-architecture-diagram">Updated Architecture diagram</a></li>
+</ul>
+<h2>Outline</h2><p>Augury is a Chrome <em>DevTools</em> extension that is primarily separated into two separate concerns: <em>backend</em> and <em>frontend</em>.</p>
+<p>The backend is responsible for parsing data from Angular 2 and updating component state when the User does so from the Augury UI. Augury allows event generation from an <code>EventEmitter</code> or RxJS <code>Subject</code>. Generally speaking, the backend deals in data.</p>
+<p>The <em>frontend</em> is the UI of Augury itself, it is a tab that is displayed in the <em>DevTools</em>.</p>
+<h3>Execution contexts</h3><p>Augury is divided into several execution contexts. It is important to note that these contexts do not have direct access to each other and therefore cannot read or write each others in-memory state. Communication between contexts must happen using Chrome&#39;s <a href="https://developer.chrome.com/extensions/messaging">extension message-passing system</a>.</p>
+<p>This communication can take several forms which are covered in more detail in <a href="#communication">Communication</a>.</p>
+<p>Conceptually the following contexts belong to the Chrome extension framework and are not unique to Augury.</p>
+<h2>Backend</h2><p>The background script is the first thing to start.</p>
+<h4>Background script</h4><p>A background script (<code>channel.ts</code>) is always running in the <em>background</em> in its own context. Augury uses a background script (<code>channel.ts</code>) to transmit small messages between the <a href="#backend">backend</a> and <a href="#frontend">frontend</a> execution contexts.</p>
+<p>It is likely that it would be possible to transmit messages directly between these two contexts, but it is helpful to have a channel that is (almost) guaranteed to always exist so that we can reduce the complexity of the code
+that establishes communication connections (in both the frontend and backend).</p>
+<p>The messages sent using the background script channel are serialized, they are small and contain no actual application data. As a result they have little impact on the performance of Augury.</p>
+<p><em>Note</em>: Messages are stored in memory in the background execution context until they can be delivered to their target.</p>
+<h4>Content script (<code>content-script.ts</code>)</h4><p>The content script is loaded in conjunction with each open tab in the browser. When you navigate to a new page or reload an existing page, the content script will be loaded as part of this process.</p>
+<p>The content script is associated with a particular tab, but it <em>does not have direct access to JavaScript application data inside that tab</em>. It runs in its own execution context.</p>
+<p>If you put a breakpoint in <code>content-script.ts</code> and reload your page, and try to inspect the <code>window</code> variable, you will notice that it is a different instance of <code>window</code> than scripts executing inside your actual page or application get. This is because the content script runs inside an <a href="https://developer.chrome.com/extensions/content_scripts#execution-environment"><em>isolated environment</em></a>.</p>
+<p>However, Augury needs direct access to JavaScript state inside the running application, so it uses a trick to inject code into that execution context so that we can do things like query Angular for application state (using <code>ng.probe()</code>).</p>
+<h4>Code injection</h4><p>This code below injects a script into the application execution context. The injected code executes in the same context as the application being debugged (the <em>inspected application</em>). This is what allows us to query Angular for its internal state, which is the foundation of Augury.</p>
+<p>If you open <code>content-script.ts</code>, you will see this piece of code (clipped for clarity):</p>
+<pre><code class="language-typescript">const inject = (fn: (element: HTMLScriptElement) =&gt; void) =&gt; {
+  const script = document.createElement(&#39;script&#39;);
+  fn(script);
+  document.documentElement.appendChild(script);
+  script.parentNode.removeChild(script);
+};
+
+const injectScript = (path: string) =&gt; {
+  inject(script =&gt; {
+    script.src = chrome.extension.getURL(path);
+  });
+};
+</code></pre>
+<h4>Initialization</h4><p>Further down in <code>content-script.ts</code>, you will see a send call, it fires a <em>initialization</em> message to the background script to start the <em>bootstrapping</em> process.</p>
+<pre><code class="language-typescript">send(MessageFactory.initialize()).then(() =&gt; injectScript(&#39;build/ng-validate.js&#39;));
+</code></pre>
+<h4>Angular Validation</h4><p>The code in <code>ng-validate.ts</code> essentially verifies that Angular 2 is running. There can be multiple Angular 2 applications on the same page, but there must be at least one in-order to use Augury.</p>
+<p>If the validator detects that Angular 2 is running, it will post a
+<code>MessageType.FrameworkLoaded</code> message to the browser event queue. If you go
+back to <code>content-script.ts</code>, you will see this piece of code:</p>
+<pre><code class="language-typescript">browserSubscribeOnce(MessageType.FrameworkLoaded,
+  () =&gt; {
+    loadOptions().then(options =&gt; {
+      // We want to load the tree rendering options that the UI has saved
+      // because that allows us to send the correct tree immediately upon
+      // startup and send it to the message queue, allowing Augury to render
+      // instantly as soon as the application is loaded. Without this bit
+      // of code we would have to wait for the frontend to start and load its
+      // options and then request the tree, which would add a lot of latency
+      // to startup.
+      injectSettings(options);
+
+      injectScript(&#39;build/backend.js&#39;);
+    });
+
+    return true;
+  });
+</code></pre>
+<p>The final step of the bootstrapping process, loads any preferences saved from the <a href="https://developer.chrome.com/extensions/storage">extension local storage</a>. The settings get injected into the application execution context, followed by the <code>backend.ts</code> script getting injected into the application execution context.</p>
+<p>This brings us to the most critical element of the Augury architecture, the <em>backend</em>.</p>
+<h4>Backend</h4><p>The backend (<code>backend.ts</code>) of Augury actually integrates with the target Angular 2 application that is being inspected. This is the
+piece of Augury that:</p>
+<ul>
+<li>Queries Angular for the complete component tree (the tree that is rendered in Augury&#39;s <em>Component Tree</em> tab).</li>
+<li>Reads <em>component</em> instance state for individual components when they get selected.</li>
+<li>Loads the <em>router</em> tree structure from Angular.</li>
+<li>Highlights elements on mouse over of components in the Component Tree view.</li>
+</ul>
+<p>The backend code of Augury should be studied closely if you wish to understand how Augury works.</p>
+<p>The most critical function in <code>backend.ts</code> is a function called <code>updateTree</code> (clipped for brevity):</p>
+<pre><code class="language-typescript">const updateTree = (roots: Array&lt;DebugElement&gt;) =&gt; {
+  const {tree} = createTreeFromElements(roots, treeRenderOptions);
+
+  if (previousTree == null) {
+    messageBuffer.enqueue(MessageFactory.completeTree(tree));
+  }
+  else {
+    const changes = previousTree.diff(tree);
+    if (changes.length &gt; 0) {
+      messageBuffer.enqueue(MessageFactory.treeDiff(previousTree.diff(tree)));
+    }
+    else {
+      return; // no changes
+    }
+  }
+
+  /// Send a message through the normal channels to indicate to the frontend
+  /// that messages are waiting for it in {@link messageBuffer}
+  send&lt;void, void&gt;(MessageFactory.push());
+
+  previousTree = tree;
+};
+</code></pre>
+<p>The essential purpose of function <code>updateTree</code> is to create our own representation of the component tree (a <code>MutableTree</code> instance, see: <code>mutable-tree.ts</code>) for all running applications. These trees should be considered <em>immutable</em> (although they are <code>MutableTree</code> type) on the backend and <em>mutable</em> on the frontend. Plus they must be as small and performant as possible.</p>
+<p>On the backend, we need to create a complete new tree when the application updates itself. We do this to compare it to the last tree we generated and produce a delta (the changes between those two trees). On the <em>frontend</em>, we maintain a single <code>MutableTree</code> instance that we <em>patch</em> when a new delta comes across the wire. This approach is optimized for the way that Angular 2 does change detection and renders components.</p>
+<p>The mutable tree on the frontend allows us to only re-render pieces of the tree that have actually been updated since the last time we rendered. Therefore even if there is a massive component tree, as long as the entire thing is not changing very often, Augury will perform very well.</p>
+<p><em>Note</em>: For performance reasons, we do not include any actual <em>application state</em> in the <code>MutableTree</code> structure-only component metadata.</p>
+<p>The following code detects when the application has completed updating.</p>
+<pre><code class="language-typescript">const bind = (root: DebugElement) =&gt; {
+  const ngZone = root.injector.get(ng.coreTokens.NgZone);
+  if (ngZone) {
+    ngZone.onStable.subscribe(() =&gt; subject.next(void 0));
+  }
+
+  subject.debounceTime(0).subscribe(() =&gt; update());
+
+  subject.next(void 0); // initial load
+};
+</code></pre>
+<p>This is the same mechanism used by tools like <a href="http://www.protractortest.org">Protractor</a> to determine when the application has finished updating itself.</p>
+<p>After the update, we create a new immutable tree representation of the application component tree:</p>
+<pre><code class="language-typescript">const {tree} = createTreeFromElements(roots, treeRenderOptions);
+</code></pre>
+<p>This is a rough Augury equivalent of what you would get if you executed this piece of code inside your debugger Console tab:</p>
+<pre><code class="language-js">getAllAngularRootElements().map(root =&gt; ng.probe(root))
+</code></pre>
+<p>The crucial difference is that our tree is a read-only representation of the tree at a particular moment in time, whereas the tree produced by <code>ng.probe()</code> is a <em>living</em> tree that changes over time (as the application itself changes).</p>
+<p>Having a representation of the component tree at a particular moment in time allows us to perform <em>difference comparisons</em> of two trees from two different moments. This allows us to send a far smaller data set than if we had to send the entire tree each time the application updates (how Augury used to work).</p>
+<h2>Frontend</h2><p>The frontend is essentially the Augury UI that is visible to you in the Chrome Developer Tools window. This includes the <em>Component Tree</em>, the <em>Router Tree</em>, the component info panel, and some other elements.</p>
+<p>The frontend is not actually bootstrapped until the user opens Developer Tools and navigates to the Augury tab. At that point you will see a loading indicator and Augury will load the current component tree in short order.</p>
+<h3>Angular 2 component tree</h3><p>Chrome extensions are not built to send large amounts of data between two different execution contexts. Therefore we try to minimize the amount of data we send from the backend to the frontend as the application is running and being debugged. This is the primary reason for the <em>tree delta</em> mechanism described in the prior section. If we have a component tree with 8,000 elements (and there are applications out there with many more than that), we must ensure that we are not sending data for each of the 8,000 elements each time the page changes. We only send data for elements that have changed.</p>
+<p>Even then, we are sending a very small amount of <em>metadata</em>. By this we mean things like <em>providers</em>, <em>dependencies</em>, <em>properties</em>, <em>change detection</em>, and many of the bits of information displayed in the component tree or in the <em>Component Info</em> panel on the right-hand side of Augury.</p>
+<p>However, there is more information than that displayed in Augury. Crucially, we display the actual application state associated with each element on the page (in the <em>State</em> accordion panel). But this state information is not transmitted as part of the element tree or tree delta.</p>
+<p>Having to serialize and transmit all that state for every single element on the page, each time the application changes, produces massive amounts of latency in Augury. (Augury used to work this way before a recent refactoring.) Therefore we only transmit that data when an element is actually selected in the frontend UI. (This is the only time that data is displayed anyway.) This significantly reduces the amount of data that has to be serialized and transmitted while the target application is running.</p>
+<h3>Performance considerations</h3><p>There are a number of performance considerations to keep in mind when working on Augury. As mentioned previously, the Chrome extension framework is not designed to transmit large amounts of data from one execution context to another. The typical way that an extension transmits data from an <em>inspected application</em> to the extension UI itself is through this pipeline:</p>
+<pre><code>Backend -&gt; Content script -&gt; Background channel -&gt; Frontend
+</code></pre><p>It therefore takes three hops just to send a small amount of data from the inspected application to the Augury UI. Keep in mind that at each step in the pipeline, Chrome will internally serialize and deserialize the message being sent using a native implementation of <code>JSON.stringify</code> and <code>JSON.parse</code>.</p>
+<p>If we are sending a very large message containing an element tree composed of tens of thousands of elements, there is going to be a lag of 5 or 6 seconds before that data arrives at the frontend. This constitutes an unacceptable performance penalty. To get around this, we employ a clever trick when we are sending large amounts of data from the backend to the frontend.</p>
+<p>If you navigate back to <code>backend.ts</code>, you will notice this piece of code toward the top of the file, along with a large block comment:</p>
+<pre><code class="language-typescript">/// For large messages, we do not send them through the normal pipe (which
+/// is backend &gt; content script &gt; background channel &gt; frontend), we add them
+/// to this buffer and then send a {@link MessageType.Push} message that
+/// tells the frontend to read messages directly from this queue itself.
+/// This allows us to prevent very large messages containing tree data from
+/// being serialized and deserialized four times. Using this mechanism, they
+/// are serialized and deserialized a total of one times.
+const messageBuffer = new MessageQueue&lt;Message&lt;any&gt;&gt;();
+</code></pre>
+<p>As described in the comment, we use this buffer for transmitting large data buffers. We <strong>do not</strong> use the normal message pipeline when sending very large amounts of data, because repeated serialization will kill performance. Instead we push a new message into <code>messageBuffer</code> and then we send a <strong>very small</strong> message to the frontend (a <code>MessageType.Push</code> message) indicating that new messages are waiting for it inside <code>messageBuffer</code>.</p>
+<p>Now, open the file <code>frontend/channel/direct-connection.ts</code>. This contains a class named <code>DirectConnection</code> which is the mechanism we use to avoid repeated message JSON serialization. First, keep in mind that large amounts of data flow in only one direction in Augury: from the backend to the frontend.</p>
+<p>Under no circumstance will we be sending a large message from the frontend to the backend. This is because the backend is where the application itself is running and therefore it contains all the data of interest. The frontend is simply a way to present that UI to the developer.</p>
+<p>So, with that in mind, take a look at the code in <code>DirectConnection</code>:</p>
+<pre><code class="language-typescript">  readQueue(processor: (message: Message&lt;any&gt;, respond: (response: MessageResponse&lt;any&gt;) =&gt; void) =&gt; void) {
+    return this.remoteExecute(&#39;inspectedApplication.readMessageQueue()&#39;)
+      .then(result =&gt; {
+        const encode = value =&gt; JSON.stringify(value);
+
+        for (const message of result) {
+          const respond = (response: MessageResponse&lt;any&gt;) =&gt; {
+            this.remoteExecute(`inspectedApplication.response(${encode(response)})`);
+          };
+
+          processor(message, respond);
+        }
+      })
+      .catch(error =&gt; {
+        throw new Error(`Failed to read message queue: ${error.stack || error.message}`);
+      });
+  }
+</code></pre>
+<p>And then a little further down in the same file:</p>
+<pre><code class="language-typescript">  private remoteExecute(code: string): Promise&lt;any&gt; {
+    return new Promise((resolve, reject) =&gt; {
+      type ExceptionInfo = chrome.devtools.inspectedWindow.EvaluationExceptionInfo;
+
+      const handler = (result, exceptionInfo: ExceptionInfo) =&gt; {
+        if (exceptionInfo &amp;&amp;
+            (exceptionInfo.isError ||
+             exceptionInfo.isException)) {
+          reject(new Error(&#39;Code evaluation failed&#39;));
+        }
+        else {
+          resolve(result);
+        }
+      };
+
+      chrome.devtools.inspectedWindow.eval(code, handler);
+    });
+  }
+</code></pre>
+<p>When the frontend receives a <code>MessageType.Push</code> message, it calls this <code>readQueue</code> function. That function in turn calls <code>remoteExecute</code> and invokes <code>WindowOperations::readMessageQueue</code> in the backend execution context, using the convenient <code>chrome.devtools.inspectedWindow.eval</code> function. This function allows us to reach directly into the backend context and read any data we want. It is then serialized <em>once</em> on its way back to the frontend execution context. This allows us to omit <em>three</em> repeated serialize/deserialize operations in the transmission of this data. This significantly reduces the latency introduced in the data transmission process.</p>
+<p>So while the mechanism is slightly more complicated than just firing a message through the normal communication pipeline, it performs significantly better and produces a better user experience and less latency inside Augury itself.</p>
+<h4>Serialization</h4><p>A complicating factor when transmitting data from the backend to the frontend is that very often, that data contains <em>circular references</em> to itself. Recall that it is impossible to serialize such data using the standard <code>JSON.stringify</code> method.</p>
+<p>Therefore we have a custom serializer (in <code>serialize.ts</code>) which is capable of serializing data that contains circular references, in a way that consumes very little memory. In essence, the serializer takes a very complex object and produces a set of JavaScript instructions that are capable of reconstructing that object inside of another execution context. It produces a string that is a JavaScript function. The string is what is transmitted across context boundaries.</p>
+<p>When the function string reaches the other side, we reconstruct the object using this construct:</p>
+<pre><code class="language-typescript">export const deserialize = value =&gt; (new Function(value))();
+</code></pre>
+<p>(Security note: this is safer than <code>eval()</code> because it does not provide access to the global context or any closure variables. It executes completely independently of the context in which it was run. It is faster than <code>eval()</code>, too.)</p>
+<p>This allows us to serialize and deserialize any object that we may come across in the wild without fear. (Note: The serializer is capable of serializing ES6 data structures like <code>Set&lt;T&gt;</code> and <code>Map&lt;K, V&gt;</code>, but it cannot <em>deserialize</em> them back to their original type on the other side. So the reconstructed object will contain all of the values and properties that the original had, but it will not have the same prototype chain.</p>
+<p>In fact it will have no prototype chain at all. The only exception to this rule is the standard <code>Array&lt;T&gt;</code> type, which is reconstructed properly back into an array type.)</p>
+<h2>Data structures</h2><p>The primary data structures that Augury works with are the types <code>MutableTree</code> and <code>Node</code>. (<code>MutableTree</code> contains <code>Node</code>s.) This is our own internal representation of component metadata, and it is what powers the <em>Component Tree</em> view in the Augury UI.</p>
+<p>Each node has an ID property (<code>id</code>) that looks like this:</p>
+<pre><code>0 0 1 2 0 1 4 2 0
+</code></pre><p>This ID doubles as a <em>path</em> to that node inside of the <code>MutableTree</code>. First, recall that a <code>MutableTree</code> can contain multiple application component trees. So the first number in the path is the index of the application that the node belongs to. Each subsequent number is an index into the <code>children</code> array inside of the parent node.</p>
+<p>Therefore, if you have an ID, you now how to traverse the path and find that node inside of the <code>MutableTree</code> structure. This is a critical performance optimization and allows us to avoid doing any searches when looking for nodes. We simply deserialize the ID and traverse the path, and voila, we have reached the node.</p>
+<p>These IDs are also used in any place where we wish to store data about particular tree nodes in the Augury UI. For example, we wish to save which nodes have been expanded or collapsed inside of the <em>Component Tree</em> view. For this purpose we have a <code>Map&lt;string, Node&gt;</code> structure (in <code>component-view-state.ts</code>). Therefore even after the tree mutates and re-renders, we still maintain the correct expand/collapse state.</p>
+<p>We do something similar in the <em>Component Info</em> panel on the right-hand side of the UI. Except in that case, we wish to maintain expand/collapse state for <em>properties</em> inside of the component instance state. For this purpose, we concatenate the node ID together with the path to the property in question. Therefore the path to a property may look like this:</p>
+<pre><code>0 0 1 2 0 myProperty subKey foobar
+</code></pre><p>So when searching for that property (for example, when the user updates a piece of state from inside the Augury UI), we simply cleave that ID in two pieces: the node path and the property path. In the example above, the result would be:</p>
+<pre><code class="language-typescript">const nodePath = [0, 0, 1, 2, 0];
+const propertyPath = [&#39;myProperty&#39;, &#39;subKey&#39;, &#39;foobar&#39;];
+</code></pre>
+<p>So we search for the node first, then once found, we search inside of its <code>componentInstance</code> value and find the <code>foobar</code> property. (To see this in action, check out <code>NodeItem</code> and <code>ComponentPropertyState</code>.)</p>
+<h1>Frontend Architecture</h1><p>The frontend is much simpler than the backend. In essence, it is not dissimilar from any other Angular 2 application that you may come across. It contains plenty of <code>@Component()</code> classes and composes those together into a UI that the developer interacts with when debugging Angular 2 applications.</p>
+<p>If you have worked with Angular 2 applications, you should have no trouble understanding the Augury UI code in the <code>frontend</code> directory.</p>
+<h1>References</h1><ul>
+<li><a href="https://developer.chrome.com/extensions/devtools">Extending DevTools</a></li>
+<li><a href="https://developer.chrome.com/extensions/event_pages">Event Pages</a></li>
+<li><a href="https://developer.chrome.com/extensions/content_scripts">Content Scripts</a></li>
+</ul>
+<h1>Updated Architecture diagram</h1><p><img src="images/angular_flow.png" style="width: 100%"></p>
+<script src="tools/prism.js"></script>
+<script src="vendors/material-design-lite/material.min.js"></script>
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-8594346-15', 'auto');
+    ga('send', 'pageview');
+</script>
+<script>
+    var trackOutboundLinkNav = function(url) {
+      ga('send', 'event', 'acquisition', 'install', 'nav', {
+        'transport': 'beacon',
+        'hitCallback': function(){document.location = url;}
+      });
+    }
+
+    var trackOutboundLinkHero = function(url) {
+      ga('send', 'event', 'acquisition', 'install', 'hero', {
+        'transport': 'beacon',
+        'hitCallback': function(){document.location = url;}
+      });
+    }
+
+    var trackOutboundLinkCta = function(url) {
+      ga('send', 'event', 'acquisition', 'install', 'cta', {
+        'transport': 'beacon',
+        'hitCallback': function(){document.location = url;}
+      });
+    }
+</script>
+</body>
+</html>

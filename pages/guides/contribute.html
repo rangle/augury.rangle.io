@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="favicon.ico" rel="shortcut icon" type="image/ico">
+    <title>Angular Augury</title>
+
+    <!-- Material Design icons -->
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,500,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="../../vendors/material-design-lite/material.min.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <link rel="stylesheet" href="../styles/main.css">
+</head>
+<body class="mdl-demo mdl-base">
+<div class="mdl-demo mdl-layout mdl-js-layout mdl-layout--fixed-drawer mdl-layout--fixed-header">
+  <header class="mdl-layout__header">
+    <div class="mdl-layout__header-row">
+      <span class="mdl-layout-title">
+        <a class="site-header mdl-navigation__link--title" href="/">
+          <img src="../../images/angular-logo-with-text.svg" alt="">
+          <span class="microsite-name mdl-typography--font-light">Augury</span>
+        </a>
+      </span>
+    <input type="checkbox" id="site-nav-checkbox" class="visuallyhidden">
+    <div class="top-nav-wrapper">
+        <label for="site-nav-checkbox">SITE MENU</label>
+        <nav class="mdl-navigation">
+            
+            <a class="mdl-navigation__link" href="/pages/guides/">Guides</a>
+            
+            <a class="mdl-navigation__link" href="/pages/resources/">Resources</a>
+            
+            <a class="mdl-navigation__link" href="https://github.com/rangle/augury/blob/dev/CHANGELOG.md">Change Log</a>
+            
+        </nav>
+        <div class="mdl-layout-spacer"></div>
+        <nav class="mdl-navigation">
+            <a class="mdl-navigation__link" href="https://chrome.google.com/webstore/detail/augury/elgalmkoelokbchhkhacckoklkejnhcd" onclick="trackOutboundLinkNav('https://chrome.google.com/webstore/detail/augury/elgalmkoelokbchhkhacckoklkejnhcd')"> Install </a>
+        </nav>
+    </div>
+    </div>
+  </header>
+
+
+<div class="mdl-layout__drawer">
+    <span class="mdl-layout-title">Guides</span>
+
+    <nav class="mdl-navigation">
+        <nav class="mdl-navigation">
+            
+            <a class="mdl-navigation__link" href="augury.html">
+                1 - augury
+            </a>
+            
+            <a class="mdl-navigation__link" href="io-demo.html">
+                2 - io demo
+            </a>
+            
+            <a class="mdl-navigation__link" href="dependency-injection.html">
+                3 - dependency injection
+            </a>
+            
+            <a class="mdl-navigation__link" href="routes.html">
+                4 - routes
+            </a>
+            
+            <a class="mdl-navigation__link" href="module-list.html">
+                5 - module list
+            </a>
+            
+            <a class="mdl-navigation__link" href="architecture.html">
+                6 - architecture
+            </a>
+            
+            <a class="mdl-navigation__link selected" href="contribute.html">
+                7 - contribute
+            </a>
+            
+        </nav>
+    </nav>
+</div>
+
+<main class="mdl-layout__content">
+    <header class="hero-background">
+        <section class="section mdl-grid mdl-grid--no-spacing">
+            <div class="mdl-cell">
+                <h4 class="mt1 page-title">Contribute</h4>
+            </div>
+        </section>
+    </header>
+
+    <div class="page-content markdown-doc">
+        <h1>Contributing to Augury</h1><p><em>First things first, thank you for contributing. We know it takes a lot of time and effort. Everything in this document is meant to provide you with as much insight as possible with regards to our contribution standards. As you read it, it is important to remember that these are just <strong>guidelines</strong> and not rules. Please use your best judgement when applying them.</em></p>
+<h3>Table of Contents</h3><ul>
+<li><a href="#im-new-anything-i-should-know">I&#39;m new. Anything I should know?</a><ul>
+<li><a href="#the-manual">The manual</a></li>
+<li><a href="#code-of-conduct">Code of Conduct</a></li>
+</ul>
+</li>
+<li><a href="#how-to-contribute">How to contribute</a><ul>
+<li><a href="#developing">Developing</a></li>
+<li><a href="#coding-style">Coding Style</a></li>
+<li><a href="#pull-requests">Pull Requests</a></li>
+<li><a href="#bugs">Bugs</a></li>
+</ul>
+</li>
+<li><a href="#how-to-get-in-touch">Get In Touch</a></li>
+<li><a href="#license">License</a></li>
+</ul>
+<h2>I&#39;m new. Anything I should know?</h2><p>Hello and welcome! Before diving into any code, there are a few things you should look over. To help, here are few resources below we thought you might find useful. We&#39;ll update these from time to time so make sure you regularly skim this section, even if you&#39;ve been contributing for a while.</p>
+<h3>The Manual</h3><p><a href="https://github.com/rangle/augury/blob/dev/README.md">README</a></p>
+<p>The first thing you should do is <em>read</em> the <a href="https://github.com/rangle/augury/blob/dev/README.md">README</a>. We have put a lot of love and care in writing it and it should provide you with the context you need for contributing to this project. Really, you should read it. </p>
+<h3>Code of conduct</h3><p><a href="https://github.com/rangle/augury/blob/dev/CODE_OF_CONDUCT.md">Code of conduct</a></p>
+<p>In the interest of making the Augury project a safe and friendly place for people from diverse backgrounds, we will be adhering to a <a href="https://github.com/rangle/augury/blob/dev/CODE_OF_CONDUCT.md">Contributor Code of Conduct</a>. As a contributor, you will be expected to uphold this code as well as report unacceptable behaviour to <a href="mailto:augury@rangle.io">augury@rangle.io</a>.</p>
+<h2>How to contribute</h2><p>Remember: No contribution is too small and no issue is too trivial. If you see a typo, we&#39;d love to get a PR. We do not like typos, find them embarrassing, if you spot any please submit a correction.</p>
+<h3>Developing</h3><p><a href="https://github.com/rangle/augury/wiki">Developer wiki</a></p>
+<p>To contribute to Augury you should have a good understanding of Angular and TypeScript. Each build of Augury is done with npm and then imported into Chrome as an extension. We have <a href="https://github.com/rangle/augury/wiki">a README just for developers</a>,  as well <a href="https://github.com/rangle/augury/wiki">a ARCHITECTURE guide</a> with a detailed technical overview.  Jumping into a new codebase can be daunting, so the ARCHITECTURE guide is your best friend. </p>
+<h3>Coding style</h3><ul>
+<li>Use semicolons;</li>
+<li>Commas last,</li>
+<li>2 spaces for indentation (no tabs)</li>
+<li>Prefer <code>&#39;</code> over <code>&quot;</code></li>
+<li>80 character line length</li>
+<li>Try to use array operations (<code>map</code>, <code>reduce</code>, <code>find</code>, etc) instead of traditional <code>while</code> or <code>for</code> loops. </li>
+<li>Use the ES6 arrow function syntax when defining your functions</li>
+<li>Try and use appropriate types for your data</li>
+</ul>
+<p>More information on some of these coding styles can be found in <code>tslint.json</code> file of this repository.</p>
+<p>TypeScript linter is part of our build task and will run in either <code>npm run build</code> or <code>npm start</code></p>
+<h3>Pull requests</h3><p>The core team will be monitoring for pull requests.</p>
+<p><em>Before</em> submitting a pull request, please make sure the following is done…</p>
+<ol>
+<li><p>Fork the repo and create your branch from <code>master</code>.</p>
+</li>
+<li><p>If you&#39;ve added code that should be tested, add tests.</p>
+</li>
+<li><p>If you&#39;ve changed APIs, development workflow or aspects of the architecrure, update the corresponding documentation.</p>
+</li>
+<li><p>TypeScript linter is part of our build task, make sure your code lints before submitting your PRs.</p>
+</li>
+</ol>
+<h3>Bugs</h3><p>We are using GitHub Issues for our public bugs. We will follow up with any issues and report on when we have a fix in progress. Before filing for a new task, try to make sure your problem does not already exist.</p>
+<p>If you do find a new issue, the best way to get a bug fixed is to provide a test case with either one of the example apps bundled in the repo, or by making your own Angular application illustrating the reduced use case. You can also include code snippets, though only if they illustrate the issue in a concise way. Do not forget to include the version of Angular app you are using!</p>
+<p>*At the moment, we offer limited backwards compatibility until Angular stabilizes. Please check <a href="https://github.com/rangle/augury/blob/dev/README.md#supported-version">README</a> for the version Augury currently supports.</p>
+<p>   ​</p>
+<h2>How to Get in Touch</h2><h3>The Chat room</h3><p><a href="https://augury-slack.herokuapp.com/">Slack</a></p>
+<p>Okay, <a href="https://github.com/rangle/augury/blob/dev/README.md">manuals</a> and <a href="https://github.com/rangle/augury/wiki">textbooks</a> are great and all but they make for poor conversation. Feel free to <a href="https://augury-slack.herokuapp.com/">join us on Slack</a>! Whether you are looking for answers to technical questions, suggestion of a new feature, or just want to share funny pictures, there is a channel for that. You can also ask us questions in private. We can not wait to hear from you.</p>
+<h2>License</h2><p><a href="https://github.com/rangle/augury/blob/dev/LICENSE">MIT</a></p>
+
+    </div>
+
+
+    <footer class="mdl-mega-footer">
+    <section class="mdl-grid mdl-grid--no-spacing">
+        <div class="mdl-cell mdl-cell--3-col mdl-layout--large-screen-only mdl-typography--text-center">
+            <img style="width: 110px; height: 120px" src="../../images/angular-logo.svg" alt="">
+        </div>
+        <div class="mdl-cell mdl-cell--3-col mdl-cell--12-col-tablet mdl-cell--12-col-phone">
+            <h4>Resources</h4>
+            <ul class="footer-links">
+                <li> <a class="" href="https://www.angular.io" title="Learn Angular">Learn Angular</a> </li>
+            </ul>
+        </div>
+        <div class="mdl-cell mdl-cell--3-col mdl-cell--12-col-tablet mdl-cell--12-col-phone">
+            <h4>Help</h4>
+            <ul class="footer-links">
+                <li> <a class="" href="https://github.com/rangle/augury/issues" title="Angular Augury GitHub Issues">Report Issues</a> </li>
+            </ul>
+        </div>
+        <div class="mdl-cell mdl-cell--3-col mdl-cell--12-col-tablet mdl-cell--12-col-phone">
+            <h4>Community</h4>
+            <ul class="footer-links">
+                <li> <a target="_blank" href="http://rangle.io/" title="Rangle.io">Rangle.io</a> </li>
+                <li> <a class="" href="https://github.com/rangle/augury" title="Angular Augury GitHub">GitHub</a> </li>
+                <li> <a class="" href="https://augury-slack.herokuapp.com" title="Angular Augury Slack">Slack</a> </li>
+            </ul>
+        </div>
+    </section>
+</footer>
+<footer>
+    <div class="mdl-mega-footer--bottom-section">
+        <p class="mdl-typography--font-light center"> Powered by Google ©2010-2016. Code licensed under an <a href="/license.html">MIT-style License</a>. Documentation licensed under <a href="http://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</p>
+    </div>
+</footer>
+
+</main></div>
+
+<script src="../../tools/prism.js"></script>
+<script src="../../vendors/material-design-lite/material.min.js"></script>
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-8594346-15', 'auto');
+    ga('send', 'pageview');
+</script>
+</body>
+</html>

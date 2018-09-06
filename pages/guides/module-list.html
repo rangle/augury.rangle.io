@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="favicon.ico" rel="shortcut icon" type="image/ico">
+    <title>Angular Augury</title>
+
+    <!-- Material Design icons -->
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,500,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="../../vendors/material-design-lite/material.min.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <link rel="stylesheet" href="../styles/main.css">
+</head>
+<body class="mdl-demo mdl-base">
+<div class="mdl-demo mdl-layout mdl-js-layout mdl-layout--fixed-drawer mdl-layout--fixed-header">
+  <header class="mdl-layout__header">
+    <div class="mdl-layout__header-row">
+      <span class="mdl-layout-title">
+        <a class="site-header mdl-navigation__link--title" href="/">
+          <img src="../../images/angular-logo-with-text.svg" alt="">
+          <span class="microsite-name mdl-typography--font-light">Augury</span>
+        </a>
+      </span>
+    <input type="checkbox" id="site-nav-checkbox" class="visuallyhidden">
+    <div class="top-nav-wrapper">
+        <label for="site-nav-checkbox">SITE MENU</label>
+        <nav class="mdl-navigation">
+            
+            <a class="mdl-navigation__link" href="/pages/guides/">Guides</a>
+            
+            <a class="mdl-navigation__link" href="/pages/resources/">Resources</a>
+            
+            <a class="mdl-navigation__link" href="https://github.com/rangle/augury/blob/dev/CHANGELOG.md">Change Log</a>
+            
+        </nav>
+        <div class="mdl-layout-spacer"></div>
+        <nav class="mdl-navigation">
+            <a class="mdl-navigation__link" href="https://chrome.google.com/webstore/detail/augury/elgalmkoelokbchhkhacckoklkejnhcd" onclick="trackOutboundLinkNav('https://chrome.google.com/webstore/detail/augury/elgalmkoelokbchhkhacckoklkejnhcd')"> Install </a>
+        </nav>
+    </div>
+    </div>
+  </header>
+
+
+<div class="mdl-layout__drawer">
+    <span class="mdl-layout-title">Guides</span>
+
+    <nav class="mdl-navigation">
+        <nav class="mdl-navigation">
+            
+            <a class="mdl-navigation__link" href="augury.html">
+                1 - augury
+            </a>
+            
+            <a class="mdl-navigation__link" href="io-demo.html">
+                2 - io demo
+            </a>
+            
+            <a class="mdl-navigation__link" href="dependency-injection.html">
+                3 - dependency injection
+            </a>
+            
+            <a class="mdl-navigation__link" href="routes.html">
+                4 - routes
+            </a>
+            
+            <a class="mdl-navigation__link selected" href="module-list.html">
+                5 - module list
+            </a>
+            
+            <a class="mdl-navigation__link" href="architecture.html">
+                6 - architecture
+            </a>
+            
+            <a class="mdl-navigation__link" href="contribute.html">
+                7 - contribute
+            </a>
+            
+        </nav>
+    </nav>
+</div>
+
+<main class="mdl-layout__content">
+    <header class="hero-background">
+        <section class="section mdl-grid mdl-grid--no-spacing">
+            <div class="mdl-cell">
+                <h4 class="mt1 page-title">NgModule Demo</h4>
+            </div>
+        </section>
+    </header>
+
+    <div class="page-content markdown-doc">
+        <p><img src="images/app-module-demo.png" style="width: 90%" alt="App Module Demo"></p>
+<p><a href="https://augury.angular.io/examples/modules/app" target="_blank">Launch Demo Application</a></p>
+<h2>Description</h2><p>We will use a simple Angular application, <em>Song List</em> to examine how to use Augury&#39;s module list feature. The application includes a simple form for the user to search for songs and will use the public Spotify API to get the results and display the album art and song title in a list.</p>
+<h2>Architecture</h2><p>The <em>Song List</em> application is composed of two modules. One, the root application module which is used to bootstrap and launch the application. The second is a single feature module that contains the components, services, and pipes relevant for the searching and displaying of song data. Lets take a look at how this is organized:</p>
+<p><img src="images/module-breakdown.png" style="width: 480px; max-width: 90%" alt="Module Breakdown"></p>
+<p>The Songs Module is a <em>feature</em> module, which exports a component, <code>SongsComponent</code> that can be used throughtout the application. This is used in the <code>AppComponent</code>, which is our <em>root</em> component that will bootstrap the application.</p>
+<p>The architecture of the <em>Song Module</em> is pretty straightforward. The <code>SongsComponent</code> contains the search field in its <em>template</em>, and has the <code>SongService</code> injected as a dependency. When the user searches for a term, the <code>SongService</code> is invoked to perform a GET request, which returns an array of results. This dataset is passed to the <code>SongListComponent</code> which will use the <code>SongPipe</code> to display the album art, song title, and the name of the artist.</p>
+<p>Now that we understand the basic architecture of the <em>Song List</em> application, lets open Augury and explore the <em>Module List</em> feature.</p>
+<h2>Opening Augury</h2><p>To use Augury, lets open up DevTools with the following shortcut:</p>
+<pre><code>Ctrl + Shift + I (Cmd + Opt + I on Mac)
+</code></pre><p>When the DevTools panel opens, select the Augury tab located on the far right. By default the <em>Component Tree</em> tab will be open. To the far right, there will be a tab labeled <em>NgModules</em>. This is the section we want so click on it to open it up!</p>
+<h2>Root Module</h2><p><img src="images/module-list-1.png" style="width: 90%" alt="Module List AppModule"></p>
+<p>The <em>Module List</em> feature lists all the modules in the application. The first module in this list is the <code>AppModule</code>. Here we can see what <em>imports</em>, <em>exports</em>, <em>providers</em>, <em>declarations</em>, and <em>providers in declarations</em> are found in the module. Our <code>AppModule</code> imports the <code>BrowserModule</code> (used for bootstrapping), <code>HttpModule</code> (used for performing network requests) and our feature module, <code>SongsModule</code>. Since the <code>AppModule</code> contains the application&#39;s root component it doesn&#39;t need to export anything. The <code>AppModule</code> has a single Provider, <code>LoggerService</code> which is a simple service used for logging messages. Finally, the <code>AppModule</code> has one component, <code>AppComponent</code> which is the root component of our application and as such is the bootstrap entry point.</p>
+<p>To see where Augury gets this information from, open up <code>app.module.ts</code> and take a look at the <code>AppModule</code> source code:</p>
+<pre><code class="language-js">import { BrowserModule } from &#39;@angular/platform-browser&#39;;
+import { NgModule } from &#39;@angular/core&#39;;
+import { HttpModule } from &#39;@angular/http&#39;;
+
+import { AppComponent } from &#39;./app.component&#39;;
+
+import { Logger } from &#39;./services/logger.service&#39;;
+
+import { SongsModule } from &#39;./modules/songs.module&#39;;
+
+@NgModule({
+  declarations: [
+    AppComponent
+  ],
+  imports: [
+    BrowserModule,
+    HttpModule,
+    SongsModule
+  ],
+  providers: [Logger],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+</code></pre>
+<p>As you can see, the information that Augury has picked out and displayed in the <em>Module List</em> comes directly from the <code>NgModule</code> definition.</p>
+<p>Declarations include the components, directives, and pipes used by the module.</p>
+<p>Imports are the other modules and their exported declarations that we want to be made available in this module.</p>
+<p>Providers list the services used by this module. Any service included as a provider in the <code>NgModel</code> definition becomes available to any other module in the hierarchical dependency injection system. For example, the <code>SongsModule</code> includes the <code>SongService</code> as a provider, since <code>AppModule</code> has imported the <code>SongsModule</code> it can now use the <code>SongService</code>. If we omitted the <code>SongService</code> from the <code>NgModel</code> definition of the <code>SongsModel</code> and instead opted to include the <code>SongService</code> in the provider definition of the <code>SongsComponent</code>, the <code>AppModule</code> will not have access to the <code>SongService</code>. Dependency Injection is a topic outside the scope of this guide, but you can read more about it on the <a href="https://angular.io/docs/ts/latest/guide/hierarchical-dependency-injection.html">Angular 2 Documentation</a></p>
+<p>So now that we&#39;ve taken a look at the root module of our application, let us continue on to the other modules in Augury&#39;s module list.</p>
+<h2>Library Modules</h2><p>Angular comes with a bunch of essential modules that we use for creating forms, making HTTP requests, and specifying what environment our application should run under. In the root module we imported the <em>BrowserModule</em> and <em>HttpModule</em>.</p>
+<p><img src="images/module-list-2.png" style="width: 90%" alt="Module List 2"></p>
+<p>Since library modules are static, there really isn&#39;t much in the way of useful information here, particularly for this application. However there may come a time where you need to debug a certain library module and given the complexity and size of such modules getting a breakdown of its <code>providers</code>, <code>exports</code> and <code>declarations</code> may come in handy.</p>
+<h2>Feature Module</h2><p>Finally, lets take a look at our feature module, <code>SongsModule</code>.</p>
+<p><img src="images/module-list-3.png" style="width: 90%" alt="Module List 3"></p>
+<p>As we can see, the <code>SongsModule</code> uses three library modules. <code>FormsModule</code> and <code>ReactiveFormsModule</code> are used for building the search form, and <code>CommonModule</code> contains many of the common directives used in the applications templates.</p>
+<p>Feature modules can be thought of as extending the functionality of an application by introducing a new feature. Since this is a feature module, it will be imported by another module (in this case the root module). However not all declarations from the <code>SongsModule</code> need to be used elsewhere. The <code>SongListComponent</code> and <code>SongPipe</code> are really only used within the <code>SongsModule</code>, so we export our main container for this module, <code>SongsComponent</code>.</p>
+<p>The <code>SongsModule</code> also uses the <code>SongService</code> as seen under the provider section.</p>
+<p>Let us take a look at the definition of the Song Module, open up <code>src/app/modules/songs.module.ts</code>:</p>
+<pre><code class="language-js">import {NgModule} from &#39;@angular/core&#39;;
+import {CommonModule} from &#39;@angular/common&#39;;
+import { FormsModule, ReactiveFormsModule } from &#39;@angular/forms&#39;;
+
+import {SongPipe} from &#39;../pipes/song.pipe&#39;;
+import {SongListComponent} from &#39;../components/song-list/song-list.component&#39;;
+import {SongsComponent} from &#39;../components/songs/songs.component&#39;;
+
+import {SongService} from &#39;../services/songs.service&#39;;
+
+@NgModule({
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule
+  ],
+  declarations: [
+    SongListComponent,
+    SongsComponent,
+    SongPipe
+  ],
+  providers: [
+    SongService
+  ],
+  exports: [
+    SongsComponent
+  ]
+})
+export class SongsModule {}
+</code></pre>
+<p>Just like our root module, Augury has picked out the <code>imports</code>, <code>declarations</code>, <code>providers</code> and <code>exports</code> information from our module definition.</p>
+<p>One important thing to take note of is that <em>Module List</em> does not include any resources (pipes, providers, directives, components, etc) that a module may use, just the resources defined by <code>NgModule</code>. For example, open up the <code>SongListComponent</code> (<code>components/song-list/song-list.component.ts</code>), here is what it should look like:</p>
+<pre><code class="language-js">export class SongListComponent {
+  @Input() songs: any;
+
+  ngOnChanges() {
+    if (this.songs) {
+      this.logger.info(&#39;song list changed!&#39;);
+    }
+  }
+
+  constructor(private logger: Logger) {
+  }
+}
+</code></pre>
+<p>The <code>SongListComponent</code> uses the <code>Logger</code> service via dependency injection that has been made available from the <code>AppModule</code>. Since the <code>AppModule</code> is at the root of the application&#39;s dependency injection hierarchy, the <code>SongListComponent</code> can use any of its providers. However, since the <code>Logger service</code> is defined in the <code>AppModule</code>, Augury will list this service under the providers section of the <code>AppModule</code>. It is not included in the section of the <code>SongsModule</code>, even though the <code>SongsModule</code> uses this service. To get a better sense of dependency injection throughout our application we should use Augury&#39;s Dependency Injection Tree.</p>
+<p>Let us see what happens when we remove the <code>SongService</code> from the provider list in the <code>SongModule</code> definition and move it to the provider list in the <code>SongsComponent</code> component definition. Here is what <code>SongsComponent</code> will look like:</p>
+<pre><code class="language-js">@Component({
+  selector: &#39;my-songs&#39;,
+  styleUrls: [&#39;./songs.component.css&#39;],
+  providers: [SongService],
+  template: `
+      &lt;h2&gt;Songs&lt;/h2&gt;
+    &lt;form [formGroup]=&quot;searchForm&quot;&gt;
+        &lt;input
+            #searchInput
+            class=&quot;search&quot;
+            formControlName=&quot;artist&quot;
+            debounce=&quot;400&quot;
+            placeholder=&quot;Search for artist&quot;
+            (keyup)=&quot;search()&quot; /&gt;
+    &lt;/form&gt;
+    &lt;hr /&gt;
+    &lt;song-list [songs]=&quot;songs&quot;&gt;&lt;/song-list&gt;
+  `
+})
+export class SongsComponent { ...
+</code></pre>
+<p>Augury has picked up what we&#39;ve done and has noticed that the <code>SongService</code> is no longer a provider from the module level, but instead from the component level. As we can see below, <code>SongService</code> is now under the <em>ProvidersInDeclarations</em> section.</p>
+<p><img src="images/module-list-4.png" style="width: 90%" alt="Module List 4"></p>
+<p>This comes in handy as Auguary is able to pick up and list all services that a module provides, whether or not they are included in the module providers, or via specific component providers.</p>
+
+    </div>
+
+
+    <footer class="mdl-mega-footer">
+    <section class="mdl-grid mdl-grid--no-spacing">
+        <div class="mdl-cell mdl-cell--3-col mdl-layout--large-screen-only mdl-typography--text-center">
+            <img style="width: 110px; height: 120px" src="../../images/angular-logo.svg" alt="">
+        </div>
+        <div class="mdl-cell mdl-cell--3-col mdl-cell--12-col-tablet mdl-cell--12-col-phone">
+            <h4>Resources</h4>
+            <ul class="footer-links">
+                <li> <a class="" href="https://www.angular.io" title="Learn Angular">Learn Angular</a> </li>
+            </ul>
+        </div>
+        <div class="mdl-cell mdl-cell--3-col mdl-cell--12-col-tablet mdl-cell--12-col-phone">
+            <h4>Help</h4>
+            <ul class="footer-links">
+                <li> <a class="" href="https://github.com/rangle/augury/issues" title="Angular Augury GitHub Issues">Report Issues</a> </li>
+            </ul>
+        </div>
+        <div class="mdl-cell mdl-cell--3-col mdl-cell--12-col-tablet mdl-cell--12-col-phone">
+            <h4>Community</h4>
+            <ul class="footer-links">
+                <li> <a target="_blank" href="http://rangle.io/" title="Rangle.io">Rangle.io</a> </li>
+                <li> <a class="" href="https://github.com/rangle/augury" title="Angular Augury GitHub">GitHub</a> </li>
+                <li> <a class="" href="https://augury-slack.herokuapp.com" title="Angular Augury Slack">Slack</a> </li>
+            </ul>
+        </div>
+    </section>
+</footer>
+<footer>
+    <div class="mdl-mega-footer--bottom-section">
+        <p class="mdl-typography--font-light center"> Powered by Google ©2010-2016. Code licensed under an <a href="/license.html">MIT-style License</a>. Documentation licensed under <a href="http://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</p>
+    </div>
+</footer>
+
+</main></div>
+
+<script src="../../tools/prism.js"></script>
+<script src="../../vendors/material-design-lite/material.min.js"></script>
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-8594346-15', 'auto');
+    ga('send', 'pageview');
+</script>
+</body>
+</html>

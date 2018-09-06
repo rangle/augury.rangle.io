@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="favicon.ico" rel="shortcut icon" type="image/ico">
+    <title>Angular Augury</title>
+
+    <!-- Material Design icons -->
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,500,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="../../vendors/material-design-lite/material.min.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <link rel="stylesheet" href="../styles/main.css">
+</head>
+<body class="mdl-demo mdl-base">
+<div class="mdl-demo mdl-layout mdl-js-layout mdl-layout--fixed-drawer mdl-layout--fixed-header">
+  <header class="mdl-layout__header">
+    <div class="mdl-layout__header-row">
+      <span class="mdl-layout-title">
+        <a class="site-header mdl-navigation__link--title" href="/">
+          <img src="../../images/angular-logo-with-text.svg" alt="">
+          <span class="microsite-name mdl-typography--font-light">Augury</span>
+        </a>
+      </span>
+    <input type="checkbox" id="site-nav-checkbox" class="visuallyhidden">
+    <div class="top-nav-wrapper">
+        <label for="site-nav-checkbox">SITE MENU</label>
+        <nav class="mdl-navigation">
+            
+            <a class="mdl-navigation__link" href="/pages/guides/">Guides</a>
+            
+            <a class="mdl-navigation__link" href="/pages/resources/">Resources</a>
+            
+            <a class="mdl-navigation__link" href="https://github.com/rangle/augury/blob/dev/CHANGELOG.md">Change Log</a>
+            
+        </nav>
+        <div class="mdl-layout-spacer"></div>
+        <nav class="mdl-navigation">
+            <a class="mdl-navigation__link" href="https://chrome.google.com/webstore/detail/augury/elgalmkoelokbchhkhacckoklkejnhcd" onclick="trackOutboundLinkNav('https://chrome.google.com/webstore/detail/augury/elgalmkoelokbchhkhacckoklkejnhcd')"> Install </a>
+        </nav>
+    </div>
+    </div>
+  </header>
+
+
+<div class="mdl-layout__drawer">
+    <span class="mdl-layout-title">Guides</span>
+
+    <nav class="mdl-navigation">
+        <nav class="mdl-navigation">
+            
+            <a class="mdl-navigation__link selected" href="augury.html">
+                1 - augury
+            </a>
+            
+            <a class="mdl-navigation__link" href="io-demo.html">
+                2 - io demo
+            </a>
+            
+            <a class="mdl-navigation__link" href="dependency-injection.html">
+                3 - dependency injection
+            </a>
+            
+            <a class="mdl-navigation__link" href="routes.html">
+                4 - routes
+            </a>
+            
+            <a class="mdl-navigation__link" href="module-list.html">
+                5 - module list
+            </a>
+            
+            <a class="mdl-navigation__link" href="architecture.html">
+                6 - architecture
+            </a>
+            
+            <a class="mdl-navigation__link" href="contribute.html">
+                7 - contribute
+            </a>
+            
+        </nav>
+    </nav>
+</div>
+
+<main class="mdl-layout__content">
+    <header class="hero-background">
+        <section class="section mdl-grid mdl-grid--no-spacing">
+            <div class="mdl-cell">
+                <h4 class="mt1 page-title">Getting Started</h4>
+            </div>
+        </section>
+    </header>
+
+    <div class="page-content markdown-doc">
+        <h1>Welcome to Augury</h1><p>In this section you will learn about what Augury is and the features that are available. Later lessons in this guide will go into more detail, with each lesson that will have an accompanying demo Angular application.</p>
+<p>Augury is an application inspection tool for Angular that runs in the Web browser. It runs as a Chrome browser <em>extension</em> for the Developer Tools (DevTools) panel, aiding in analysis and debugging during development.</p>
+<p>Augury provides insight into the application structure for an Angular application and the relationship between these building blocks:</p>
+<ul>
+<li>Components</li>
+<li>Services</li>
+<li>Routes</li>
+<li>Modules</li>
+<li>Dependencies</li>
+<li>Injectors</li>
+<li>Data bindings</li>
+<li>Events</li>
+<li>Object properties</li>
+</ul>
+<p>Augury compliments DevTools during a debugging session, making it easy to modify state and emit events.</p>
+<h2>Installing Augury</h2><p>The best way to install Augury is from the <a href="https://chrome.google.com/webstore/category/extensions?hl=en">chrome web store</a>. Select <em>Extensions</em> from the side panel, type &quot;Augury&quot; into the search field, and then press <em>Enter</em>.</p>
+<p><img src="images/chrome-web-store.png" alt="Image Chrome Web store"></p>
+<p>The search result should list the Augury extension by <em>Rangle.io</em>:</p>
+<p><img src="images/augury-extension.png" alt="Image Augury extension"></p>
+<p>When you click on &quot;Add To Chrome&quot;, a <em>popup</em> will open. Select &quot;Add extension&quot; to complete the process. Once the <em>plugin</em> has been successfully installed, an Augury icon will appear next to the address bar in the browser.</p>
+<p><img src="images/extension-logo.png" alt="Image Extension logo"></p>
+<p>The Augury icon provides additional information. Click on the icon now to discover what that is.</p>
+<h2>Using Augury</h2><p>To start using Augury, you must have an Angular application running in the browser for inspection. If you have never debugged a JavaScript application, you may not be aware that each modern Web browser provides a debug environment straight in the browser. <em>DevTools</em>, the debug environment is opened using the following <em>shortcut</em>:</p>
+<ul>
+<li>For Windows and Linux, use <code>Ctrl + Shift + I</code></li>
+<li>For Mac OS X, use <code>Cmd + Opt + I</code></li>
+</ul>
+<p>When DevTools is opened, you will find the Augury tab on the far right.</p>
+<p><img src="images/devtools.png" alt="Image DevTools"></p>
+<h2>Augury features</h2><p>We will quickly go over the main functionality that is available in Augury. This is to become familiar with the features and how to locate them when needed.</p>
+<p>The first view that is visible is the <em>Component Tree</em> which shows <strong>loaded</strong> components belonging to the application.</p>
+<p><img src="images/component-tree.png" alt="Image Component tree"></p>
+<p>The component tree displays a hierarchical relationship of the <em>components</em>. When a <em>component</em> is selected, Augury presents additional information about the selected <em>component</em> in the <em>Properties</em> tab.</p>
+<p><img src="images/properties.png" style="width: 100%"></p>
+<p>Notable items of interest are:</p>
+<ol>
+<li>View Source — a link to the source code of the component.</li>
+<li>Change Detection — displays whether or not Change Detection is in use for the component.</li>
+<li>Object Properties — lists the properties of the component.</li>
+<li>Dependencies - lists the dependencies of the component.</li>
+</ol>
+<p>To view the source code of the selected <em>component</em>, click the &#39;View Source&#39; link. This will bring the <em>Sources</em> tab into focus and display the source code.</p>
+<h3>Source map</h3><p>One thing to keep in mind, the <em>TypeScript</em> code will only be shown if a <em>source map</em> file exists. In production, if no <em>source map</em> is found, what you will see is the compiled JavaScript code, which may also be minified and difficult to read.</p>
+<p>Next to the <em>Properties</em> tab is the <em>Injector Graph</em>, clicking on it will display the dependency of <em>components</em> and <em>services</em>.</p>
+<p><img src="images/injector-graph.png" alt="Image Injector graph"></p>
+<p>We will learn more about how to interpret the <em>Injector Graph</em> in later lessons.</p>
+<p>The final major feature of Augury is the <em>Router Tree</em>, which displays the routing information for the application. The <em>Router Tree</em> tab is located next to the <em>Component Tree</em> tab along the top left side.</p>
+<p><img src="images/router-tree.png" alt="Image Router tree"></p>
+<p>There are a few things we didn&#39;t cover here such as data binding and events which will be covered in other lessons. However, you now have a basic understanding of Augury and how to start exploring its features with an Angular application.</p>
+<p>Augury has evolved and improved over time since its debut, and it will continue to improve. We hope you will come to love Augury and make it an indispensable tool in your toolbox. We love and welcome all feedback, come join us on our <a href="https://augury-slack.herokuapp.com">Slack channel</a>.</p>
+
+    </div>
+
+
+    <footer class="mdl-mega-footer">
+    <section class="mdl-grid mdl-grid--no-spacing">
+        <div class="mdl-cell mdl-cell--3-col mdl-layout--large-screen-only mdl-typography--text-center">
+            <img style="width: 110px; height: 120px" src="../../images/angular-logo.svg" alt="">
+        </div>
+        <div class="mdl-cell mdl-cell--3-col mdl-cell--12-col-tablet mdl-cell--12-col-phone">
+            <h4>Resources</h4>
+            <ul class="footer-links">
+                <li> <a class="" href="https://www.angular.io" title="Learn Angular">Learn Angular</a> </li>
+            </ul>
+        </div>
+        <div class="mdl-cell mdl-cell--3-col mdl-cell--12-col-tablet mdl-cell--12-col-phone">
+            <h4>Help</h4>
+            <ul class="footer-links">
+                <li> <a class="" href="https://github.com/rangle/augury/issues" title="Angular Augury GitHub Issues">Report Issues</a> </li>
+            </ul>
+        </div>
+        <div class="mdl-cell mdl-cell--3-col mdl-cell--12-col-tablet mdl-cell--12-col-phone">
+            <h4>Community</h4>
+            <ul class="footer-links">
+                <li> <a target="_blank" href="http://rangle.io/" title="Rangle.io">Rangle.io</a> </li>
+                <li> <a class="" href="https://github.com/rangle/augury" title="Angular Augury GitHub">GitHub</a> </li>
+                <li> <a class="" href="https://augury-slack.herokuapp.com" title="Angular Augury Slack">Slack</a> </li>
+            </ul>
+        </div>
+    </section>
+</footer>
+<footer>
+    <div class="mdl-mega-footer--bottom-section">
+        <p class="mdl-typography--font-light center"> Powered by Google ©2010-2016. Code licensed under an <a href="/license.html">MIT-style License</a>. Documentation licensed under <a href="http://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</p>
+    </div>
+</footer>
+
+</main></div>
+
+<script src="../../tools/prism.js"></script>
+<script src="../../vendors/material-design-lite/material.min.js"></script>
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-8594346-15', 'auto');
+    ga('send', 'pageview');
+</script>
+</body>
+</html>
