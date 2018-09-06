@@ -6,11 +6,17 @@ jobs:
     working_directory: ~/tmp
     steps:
       - checkout
+      - persist_to_workspace:
+          root: ~/tmp/www
+          paths:
+            - .
   deploy:
     docker:
       - image: circleci/python:2.7-jessie
     working_directory: ~/tmp
     steps:
+      - attach_workspace:
+          at: ~/tmp/www
       - run:
           name: Installing dependencies.
           command: sudo pip install awscli
