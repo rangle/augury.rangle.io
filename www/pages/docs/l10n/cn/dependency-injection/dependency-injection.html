@@ -16,7 +16,7 @@
 </head>
 <body class="mdl-demo mdl-base">
 <p><img src="images/form-empty.png" alt="Image Empty Form"></p>
-<p><a href="https://augury.angular.io/examples/dependency-injection/app/" target="blank">Launch Demo Application</a></p>
+<p><a href="/examples/dependency-injection/app/index.html" target="blank">Launch Demo Application</a></p>
 <h2>Description</h2><p>The <em>Dependency Injection</em> application exemplifies using a simple Angular <em>template</em> based <em>Form</em> that uses a data <em>service</em> to hold the submitted data. The data <em>service</em> provides a data <em>stream</em> to publish updates. A view <em>component</em> subscribes to the data <em>stream</em> and displays the most recent submitted user data in table format.</p>
 <p>To display the <em>User</em> data table, enter values in the <em>Form</em> and click on the <em>Create</em> button.</p>
 <p><img src="images/form-entry.png" alt="Image User Data Entry"></p>
@@ -47,7 +47,7 @@
 <h2>Viewing Source Code</h2><p>In the <em>Properties</em> tab, next to the name of the <em>component</em> you will notice a clickable link called <code>(View Source)</code>. By clicking on it, DevTools will switch to the <em>Sources</em> tab to show the TypeScript code of the selected <em>component</em>.</p>
 <p><img src="images/devtools-sources.png" alt="Image DevTool Sources">.</p>
 <p>In the TypeScript code, you see <code>title</code> property assignment, which is what is displayed in Augury&#39;s <em>Properties</em> tab.</p>
-<pre><code class="language-js"> title = &#39;Angular Form: New User&#39;;
+<pre><code class="language-js">title = &#39;Angular Form: New User&#39;;
 </code></pre>
 <p>To return to Augury, click on the Augury tab.</p>
 <h2>Dependency</h2><p>Let us take a look at the <code>UserInfoComponent</code>, select it from the <em>Component Tree</em>. In the <em>Properties</em> tab, we see that under <em>State</em>, the component has only one property <code>newUserService</code> and one dependency to <code>NewUserService</code>.</p>
@@ -81,20 +81,12 @@
 <h3>Understanding The Graph</h3><p>Let us look at how to read the <em>Injector</em> graph. At the top we have the <em>Root injector</em>, which is found in the <code>NgModule</code> at the root of the application.</p>
 <p>In the code, looking at file <code>app.module.ts</code> we see 3 <em>components</em> being declared by the root module as well as the one <em>service</em> <code>NewUserService</code> that is registered with the <em>Root injector</em>.</p>
 <pre><code class="language-js">@NgModule({
-  declarations: [
-    AppComponent,
-    FormNewUserComponent,
-    UserInfoComponent
-  ],
-  imports: [
-    BrowserModule,
-    FormsModule,
-    HttpModule
-  ],
-  providers: [NewUserService ],
+  declarations: [AppComponent, FormNewUserComponent, UserInfoComponent],
+  imports: [BrowserModule, FormsModule, HttpModule],
+  providers: [NewUserService],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}
 </code></pre>
 <p>Looking at the graph, we see that <code>UserInfoComponent</code> is projected by <code>AppComponent</code>, the parent <em>component</em>. This is obvious if we look at the code (<code>app.component.ts</code>), in the <em>template</em> string we see <code>&lt;app-user-info&gt;</code> being used.</p>
 <pre><code class="language-js">@Component({

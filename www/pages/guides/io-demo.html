@@ -30,9 +30,9 @@
         <label for="site-nav-checkbox">SITE MENU</label>
         <nav class="mdl-navigation">
             
-            <a class="mdl-navigation__link" href="/pages/guides/">Guides</a>
+            <a class="mdl-navigation__link" href="/pages/guides/index.html">Guides</a>
             
-            <a class="mdl-navigation__link" href="/pages/resources/">Resources</a>
+            <a class="mdl-navigation__link" href="/pages/resources/index.html">Resources</a>
             
             <a class="mdl-navigation__link" href="https://github.com/rangle/augury/blob/dev/CHANGELOG.md">Change Log</a>
             
@@ -95,7 +95,7 @@
 
     <div class="page-content markdown-doc">
         <p><img src="images/io-app.png" style="width: 100%"></p>
-<p><a href="https://augury.angular.io/examples/input-output/app/" target="blank">Launch Demo Application</a></p>
+<p><a href="/examples/input-output/app/index.html" target="blank">Launch Demo Application</a></p>
 <h2>Description</h2><p>The <em>Input Output Angular</em> application demonstrates passing data inside a component as well as across components. The application makes uses of Angular input and output decorators as well as event and data binding.</p>
 <p>The IO Application is composed of 5 components that are:</p>
 <h3>Components</h3><ul>
@@ -181,12 +181,12 @@ export class AppComponent {
 <p>Augury will not show properties in a component if it not assigned a value, since TypeScript will simply compile it out. It is therefore suggested you assign a default value to each property. Having a property with an <code>undefined</code> value is poor coding practice and is an anti-pattern.</p>
 <p><strong>Bad</strong></p>
 <pre><code class="language-js">class Foo {
-   name: string;
+  name: string;
 }
 </code></pre>
 <p><strong>Good</strong></p>
 <pre><code class="language-js">class Foo {
-  name: string = &quot;&quot;;
+  name: string = &#39;&#39;;
 }
 </code></pre>
 <p>In our example IO application, we have intentionally declared a property count with no assigned value to demonstrate the behaviour you would see in Augury. If you are not aware of why a property failed to appear, you might be confused.</p>
