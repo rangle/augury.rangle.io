@@ -16,7 +16,7 @@
 </head>
 <body class="mdl-demo mdl-base">
 <p><img src="images/app-module-demo.png" style="width: 90%" alt="App Module Demo"></p>
-<p><a href="https://augury.angular.io/examples/modules/app" target="_blank">Launch Demo Application</a></p>
+<p><a href="/examples/modules/app/index.html" target="_blank">Launch Demo Application</a></p>
 <h2>Description</h2><p>We will use a simple Angular application, <em>Song List</em> to examine how to use Augury&#39;s module list feature. The application includes a simple form for the user to search for songs and will use the public Spotify API to get the results and display the album art and song title in a list.</p>
 <h2>Architecture</h2><p>The <em>Song List</em> application is composed of two modules. One, the root application module which is used to bootstrap and launch the application. The second is a single feature module that contains the components, services, and pipes relevant for the searching and displaying of song data. Lets take a look at how this is organized:</p>
 <p><img src="images/module-breakdown.png" style="width: 480px; max-width: 90%" alt="Module Breakdown"></p>
@@ -40,18 +40,12 @@ import { Logger } from &#39;./services/logger.service&#39;;
 import { SongsModule } from &#39;./modules/songs.module&#39;;
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
-  imports: [
-    BrowserModule,
-    HttpModule,
-    SongsModule
-  ],
+  declarations: [AppComponent],
+  imports: [BrowserModule, HttpModule, SongsModule],
   providers: [Logger],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}
 </code></pre>
 <p>As you can see, the information that Augury has picked out and displayed in the <em>Module List</em> comes directly from the <code>NgModule</code> definition.</p>
 <p>Declarations include the components, directives, and pipes used by the module.</p>
@@ -67,33 +61,21 @@ export class AppModule { }
 <p>Feature modules can be thought of as extending the functionality of an application by introducing a new feature. Since this is a feature module, it will be imported by another module (in this case the root module). However not all declarations from the <code>SongsModule</code> need to be used elsewhere. The <code>SongListComponent</code> and <code>SongPipe</code> are really only used within the <code>SongsModule</code>, so we export our main container for this module, <code>SongsComponent</code>.</p>
 <p>The <code>SongsModule</code> also uses the <code>SongService</code> as seen under the provider section.</p>
 <p>Let us take a look at the definition of the Song Module, open up <code>src/app/modules/songs.module.ts</code>:</p>
-<pre><code class="language-js">import {NgModule} from &#39;@angular/core&#39;;
-import {CommonModule} from &#39;@angular/common&#39;;
+<pre><code class="language-js">import { NgModule } from &#39;@angular/core&#39;;
+import { CommonModule } from &#39;@angular/common&#39;;
 import { FormsModule, ReactiveFormsModule } from &#39;@angular/forms&#39;;
 
-import {SongPipe} from &#39;../pipes/song.pipe&#39;;
-import {SongListComponent} from &#39;../components/song-list/song-list.component&#39;;
-import {SongsComponent} from &#39;../components/songs/songs.component&#39;;
+import { SongPipe } from &#39;../pipes/song.pipe&#39;;
+import { SongListComponent } from &#39;../components/song-list/song-list.component&#39;;
+import { SongsComponent } from &#39;../components/songs/songs.component&#39;;
 
-import {SongService} from &#39;../services/songs.service&#39;;
+import { SongService } from &#39;../services/songs.service&#39;;
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule
-  ],
-  declarations: [
-    SongListComponent,
-    SongsComponent,
-    SongPipe
-  ],
-  providers: [
-    SongService
-  ],
-  exports: [
-    SongsComponent
-  ]
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  declarations: [SongListComponent, SongsComponent, SongPipe],
+  providers: [SongService],
+  exports: [SongsComponent]
 })
 export class SongsModule {}
 </code></pre>
